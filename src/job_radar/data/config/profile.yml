@@ -1,0 +1,12 @@
+roles:
+  - Product
+  - Operations
+  - Analyst
+skills:
+  - operations
+  - analytics
+  - product
+evidence:
+  - completed operational case study
+languages: []
+seniority: unspecified

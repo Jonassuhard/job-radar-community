@@ -1,0 +1,83 @@
+{
+  "allowed_domains": [
+    "example.com",
+    "example.org",
+    "example.net",
+    "example.invalid"
+  ],
+  "generator": "scripts/audit_release_media.py",
+  "images": [
+    {
+      "bytes": 30542,
+      "dimensions": [
+        1440,
+        900
+      ],
+      "domains": [],
+      "file": "insights.webp",
+      "metadata_findings": [],
+      "non_example_domains": [],
+      "pii_findings": [],
+      "sha256": "1a6c4aaf32bd608a4c70b1ad0c1798a6f8ce0b69fae8a8621ddc8b27aa5edb9a",
+      "webp_chunks": [
+        "VP8 "
+      ]
+    },
+    {
+      "bytes": 17574,
+      "dimensions": [
+        390,
+        844
+      ],
+      "domains": [],
+      "file": "mobile.webp",
+      "metadata_findings": [],
+      "non_example_domains": [],
+      "pii_findings": [],
+      "sha256": "72c8decff392147c191f7addf45fed07f391eb8f087b5b8dfe7c15b805fe9275",
+      "webp_chunks": [
+        "VP8 "
+      ]
+    },
+    {
+      "bytes": 39338,
+      "dimensions": [
+        1440,
+        900
+      ],
+      "domains": [],
+      "file": "radar-overview.webp",
+      "metadata_findings": [],
+      "non_example_domains": [],
+      "pii_findings": [],
+      "sha256": "e213b286ec41ebf5497a9280b3106e0a5fc33ba14b7353a91924439b286f5317",
+      "webp_chunks": [
+        "VP8 "
+      ]
+    },
+    {
+      "bytes": 40808,
+      "dimensions": [
+        1024,
+        768
+      ],
+      "domains": [],
+      "file": "score-explained.webp",
+      "metadata_findings": [],
+      "non_example_domains": [],
+      "pii_findings": [],
+      "sha256": "b404284457a7328cad7963f5446c669201354b882dbd8d89a18df2e045d2ccd6",
+      "webp_chunks": [
+        "VP8 "
+      ]
+    }
+  ],
+  "ocr_engine": "tesseract-5",
+  "schema_version": 1,
+  "summary": {
+    "images": 4,
+    "metadata_findings": 0,
+    "non_example_domains": 0,
+    "pii_findings": 0
+  }
+}

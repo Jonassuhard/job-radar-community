@@ -1,0 +1,12 @@
+aliases:
+  workflow:
+    - process
+    - operations
+  data_quality:
+    - data verification
+required:
+  - workflow
+preferred:
+  - data_quality
+mentioned:
+  - documentation

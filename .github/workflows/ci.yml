@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Python 3.12
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+      - name: Install OCR dependency
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - name: Install locked environment
+        run: uv sync --locked --group dev
+      - name: Test and lint
+        run: |
+          uv run --locked --group dev pytest -q
+          uv run --locked --group dev ruff check .
+      - name: Validate OpenAPI and public tree
+        run: |
+          uv run --locked --group dev python scripts/export_openapi.py > /tmp/openapi.json
+          uv run --locked --group dev python -m json.tool /tmp/openapi.json > /dev/null
+          uv run --locked --group dev python scripts/public_audit.py .
+          uv run --locked --group dev python scripts/audit_release_media.py \
+            --assets-dir docs/assets \
+            --check docs/verification/v0.1.0-beta.1-media.json
+
+  frontend:
+    name: Node 22
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+      - name: Install, test, and build
+        run: |
+          uv sync --locked --group dev
+          npm --prefix frontend ci
+          npm --prefix frontend exec playwright install --with-deps chromium
+          npm --prefix frontend test -- --run
+          npm --prefix frontend run test:e2e
+          npm --prefix frontend run build

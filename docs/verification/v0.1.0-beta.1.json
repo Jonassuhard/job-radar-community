@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "release": "v0.1.0-beta.1",
+  "status": "pending_commit_pin",
+  "tested_product_commit": null,
+  "test_harness_commit": null,
+  "verified_at": null,
+  "publication": {
+    "status": "not_observed",
+    "observed_at": null
+  },
+  "limitations": [
+    "No test, audit, capture or publication result is claimed while the candidate commit is not pinned.",
+    "The final release builder rejects this pending record."
+  ]
+}

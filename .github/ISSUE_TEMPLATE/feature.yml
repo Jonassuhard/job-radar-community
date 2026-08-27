@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a change within the local, explainable public edition.
+title: "feature: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Requests for auto-application, authenticated browsing, CAPTCHA bypass, or crawlers for manual_only sources are out of scope.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the user problem with no personal or application data.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the smallest useful change and its source-policy impact.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I confirm this request contains no CV, cookies, tokens, credentials, or personal application data.
+          required: true

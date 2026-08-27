@@ -1,0 +1,34 @@
+axes:
+  - name: role_fit
+    weight: 35
+  - name: skills
+    weight: 25
+  - name: location
+    weight: 15
+  - name: contract
+    weight: 15
+  - name: work_mode
+    weight: 10
+decisions:
+  - name: reject
+    min_score: 0
+  - name: monitor
+    min_score: 30
+  - name: review
+    min_score: 55
+  - name: prioritize
+    min_score: 75
+thresholds:
+  minimum_confidence: 40
+caps:
+  bonus: 10
+  penalty: 20
+bonuses:
+  - name: salary_transparency
+    points: 5
+penalties:
+  - name: missing_role_detail
+    points: 10
+blockers:
+  - name: excluded_term
+    condition: excluded_term

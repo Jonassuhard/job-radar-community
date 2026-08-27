@@ -1,0 +1,24 @@
+# Public repository allowlist
+# Every public root must be listed here before it is added to a release.
+.env.example
+.github/
+.gitignore
+.nvmrc
+.python-version
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+PUBLIC_MANIFEST
+README.md
+SECURITY.md
+SUPPORT.md
+THIRD_PARTY_NOTICES.md
+config/
+docs/
+frontend/
+pyproject.toml
+scripts/
+src/
+tests/
+uv.lock

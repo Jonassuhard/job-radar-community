@@ -1,0 +1,138 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "1.24.1"
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+      - name: Install locked tools
+        run: |
+          uv sync --locked --group dev
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr
+          go install github.com/gitleaks/gitleaks/v8@v8.30.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Verify source and dependencies
+        run: |
+          uv run --locked --group dev pytest -q
+          uv run --locked --group dev ruff check .
+          uv run --locked --group dev pip-audit
+          uv run --locked --group dev python scripts/export_openapi.py > /tmp/openapi.json
+          uv run --locked --group dev python -m json.tool /tmp/openapi.json > /dev/null
+          uv run --locked --group dev python scripts/public_audit.py .
+          uv run --locked --group dev python scripts/audit_release_media.py \
+            --assets-dir docs/assets \
+            --check docs/verification/v0.1.0-beta.1-media.json
+          gitleaks detect --source . --log-opts="--all" --redact
+      - name: Verify frontend
+        run: |
+          npm --prefix frontend ci
+          npm --prefix frontend exec playwright install --with-deps chromium
+          npm --prefix frontend test -- --run
+          npm --prefix frontend run test:e2e
+          npm --prefix frontend run build
+          npm --prefix frontend audit --omit=dev --audit-level=high
+      - name: Build Python distributions
+        run: uv build --out-dir dist
+      - name: Extract and audit Python distributions
+        run: |
+          uv run --locked --group dev python scripts/audit_python_distribution.py \
+            --wheel dist/*.whl \
+            --sdist dist/*.tar.gz \
+            --output-dir /tmp/job-radar-python-distributions
+          gitleaks detect --no-git --source /tmp/job-radar-python-distributions --redact
+      - name: Build deterministic allowlisted source archive
+        id: package
+        run: |
+          uv run --locked --group dev python scripts/build_release.py \
+            --source-root . \
+            --output-dir artifacts \
+            --tag "$GITHUB_REF_NAME"
+          archive_root="job-radar-community-${GITHUB_REF_NAME}"
+          printf 'archive_root=%s\n' "$archive_root" >> "$GITHUB_OUTPUT"
+      - name: Audit release staging and extracted archive
+        run: |
+          archive_root="${{ steps.package.outputs.archive_root }}"
+          gitleaks detect --no-git --source "artifacts/$archive_root" --redact
+          unzip -q "artifacts/$archive_root.zip" -d artifacts/extracted
+          uv run --locked --group dev python scripts/public_audit.py \
+            --strict-release "artifacts/extracted/$archive_root"
+          gitleaks detect --no-git --source "artifacts/extracted/$archive_root" --redact
+      - uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+        with:
+          path: artifacts/${{ steps.package.outputs.archive_root }}
+          format: cyclonedx-json
+          output-file: artifacts/job-radar-community-${{ github.ref_name }}.cdx.json
+          upload-artifact: false
+          upload-release-assets: false
+      - name: Collect release assets
+        run: |
+          cp dist/* artifacts/
+      - name: Finalize release attestation
+        run: |
+          archive_root="${{ steps.package.outputs.archive_root }}"
+          wheels=(artifacts/*.whl)
+          sdists=(artifacts/*.tar.gz)
+          test "${#wheels[@]}" -eq 1
+          test "${#sdists[@]}" -eq 1
+          uv run --locked --group dev python scripts/finalize_release_attestation.py \
+            --tag "$GITHUB_REF_NAME" \
+            --expected-commit "$GITHUB_SHA" \
+            --attestation "artifacts/$archive_root.attestation.json" \
+            --source-archive "artifacts/$archive_root.zip" \
+            --source-checksum "artifacts/$archive_root.zip.sha256" \
+            --sbom "artifacts/$archive_root.cdx.json" \
+            --wheel "${wheels[0]}" \
+            --sdist "${sdists[0]}"
+      - name: Remove non-publishable release directories
+        run: |
+          rm -rf \
+            "artifacts/${{ steps.package.outputs.archive_root }}" \
+            artifacts/extracted
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-assets
+          path: artifacts/
+          if-no-files-found: error
+
+  publish:
+    needs: verify-and-package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-assets
+          path: artifacts
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          bash scripts/publish_release.sh "$GITHUB_REF_NAME" artifacts

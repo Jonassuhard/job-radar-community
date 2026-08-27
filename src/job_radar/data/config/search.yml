@@ -1,0 +1,13 @@
+locations:
+  - Paris
+  - Remote France
+contracts:
+  - permanent
+  - fixed_term
+remote: any
+salary_minimum: 0
+include_terms:
+  - operations
+  - product
+exclude_terms:
+  - commission-only

@@ -1,0 +1,11 @@
+sources:
+  local_demo:
+    mode: api
+    quota_per_day: 100
+    api_key_env: JOB_RADAR_DEMO_API_KEY
+  linkedin:
+    mode: manual_only
+  indeed:
+    mode: manual_only
+  wttj:
+    mode: manual_only
