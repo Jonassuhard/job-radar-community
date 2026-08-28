@@ -317,10 +317,7 @@ def test_installed_wheel_cli_runs_all_local_commands_with_empty_pythonpath(tmp_p
         capture_output=True,
         text=True,
     )
-    subprocess.run(
-        [sys.executable, "-m", "venv", "--system-site-packages", str(venv_dir)],
-        check=True,
-    )
+    subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
     wheel = next(wheel_dir.glob("job_radar_community-*.whl"))
     subprocess.run(
         [
@@ -328,7 +325,6 @@ def test_installed_wheel_cli_runs_all_local_commands_with_empty_pythonpath(tmp_p
             "-m",
             "pip",
             "install",
-            "--no-deps",
             str(wheel),
         ],
         check=True,

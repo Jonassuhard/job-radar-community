@@ -109,10 +109,10 @@ def test_built_wheel_seeds_demo_outside_the_checkout(tmp_path):
         str(project_root),
     ]
     subprocess.run(wheel_command, check=True, capture_output=True, text=True)
-    subprocess.run([sys.executable, "-m", "venv", "--system-site-packages", str(venv_dir)], check=True)
+    subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
     wheel = next(wheel_dir.glob("job_radar_community-*.whl"))
     python = venv_dir / "bin" / "python"
-    subprocess.run([str(python), "-m", "pip", "install", "--no-deps", str(wheel)], check=True)
+    subprocess.run([str(python), "-m", "pip", "install", str(wheel)], check=True)
     run_dir.mkdir()
     command = [
         str(python),

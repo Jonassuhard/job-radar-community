@@ -351,6 +351,9 @@ def test_publish_shell_rejects_malformed_or_extended_attestation(
 
 def test_release_workflow_binds_repository_and_audits_python_distributions() -> None:
     workflow = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+    security_workflow = (ROOT / ".github/workflows/security.yml").read_text(
+        encoding="utf-8"
+    )
 
     assert "GH_REPO: ${{ github.repository }}" in workflow
     assert "scripts/publish_release.sh" in workflow
@@ -364,6 +367,10 @@ def test_release_workflow_binds_repository_and_audits_python_distributions() -> 
     assert workflow.index("scripts/finalize_release_attestation.py") < workflow.index(
         "actions/upload-artifact"
     )
+    assert "actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16" in security_workflow
+    assert "go install github.com/gitleaks/gitleaks/v8@v8.30.1" in security_workflow
+    assert 'gitleaks detect --source . --log-opts="--all" --redact' in security_workflow
+    assert "gitleaks/gitleaks-action@" not in security_workflow
 
 
 def test_publish_job_checks_out_the_release_script_before_running_it() -> None:
