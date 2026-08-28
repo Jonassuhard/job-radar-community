@@ -148,9 +148,9 @@
     }
   ],
   "expected_limitations": [
-    "This is a local release-candidate verification only.",
-    "No GitHub repository, push, tag, release, branch protection or GitHub Actions run was created or verified.",
+    "This local release-candidate verification is supplemented by successful GitHub CI and Security checks attached to the tested commit.",
+    "At the publication observation time, the public repository existed but the v0.1.0-beta.1 tag, GitHub release, branch protection and jonassuhard.com deployment did not.",
     "tested_product_commit and test_harness_commit identify the locally verified code-and-test commit immediately preceding this evidence record; the external ZIP attestation identifies the later packaging commit and tree.",
-    "The public repository and jonassuhard.com acceptance criteria remain unverified and unpublished."
+    "Release assets and the jonassuhard.com acceptance criteria remain unverified until their later workflows complete."
   ]
 }
