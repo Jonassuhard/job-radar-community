@@ -370,7 +370,7 @@ def test_release_workflow_binds_repository_and_audits_python_distributions() -> 
     assert 'go-version: "1.24.11"' in workflow
     assert "actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16" in security_workflow
     assert 'go-version: "1.24.11"' in security_workflow
-    assert "go install github.com/gitleaks/gitleaks/v8@v8.30.1" in security_workflow
+    assert "go install github.com/zricethezav/gitleaks/v8@v8.30.1" in security_workflow
     assert 'gitleaks detect --source . --log-opts="--all" --redact' in security_workflow
     assert "gitleaks/gitleaks-action@" not in security_workflow
 

@@ -176,7 +176,7 @@ def test_audit_allows_go_module_versions_and_ignores_empty_untracked_directories
     tmp_path: Path,
 ) -> None:
     (tmp_path / "README.md").write_text(
-        "go install github.com/gitleaks/gitleaks/v8@v8.30.1\n",
+        "go install github.com/zricethezav/gitleaks/v8@v8.30.1\n",
         encoding="utf-8",
     )
     (tmp_path / "empty-untracked").mkdir()
