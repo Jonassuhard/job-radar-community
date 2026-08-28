@@ -1,16 +1,163 @@
 {
   "schema_version": 2,
   "release": "v0.1.0-beta.1",
-  "status": "pending_commit_pin",
-  "tested_product_commit": null,
-  "test_harness_commit": null,
-  "verified_at": null,
+  "status": "local_candidate_verified",
+  "tested_product_commit": "7308f8e51b47a696590b59bff2795770cedc52c8",
+  "test_harness_commit": "7308f8e51b47a696590b59bff2795770cedc52c8",
+  "verified_at": "2026-08-28T02:54:52+02:00",
   "publication": {
-    "status": "not_observed",
-    "observed_at": null
+    "status": "not_published",
+    "observed_at": "2026-08-28T02:54:52+02:00"
   },
+  "environment": {
+    "platform": "macOS arm64",
+    "services": [
+      "FastAPI demo on 127.0.0.1:8000",
+      "Vite frontend on 127.0.0.1:4173"
+    ],
+    "dataset": "42 fictitious offline demo offers"
+  },
+  "versions": {
+    "python": "3.12.1",
+    "node": "25.8.2",
+    "npm": "11.11.1",
+    "uv": "0.11.3",
+    "playwright": "1.62.1",
+    "axe_core_playwright": "4.13.0",
+    "ruff": "0.16.4",
+    "pip_audit": "2.10.1",
+    "gitleaks": "8.30.1"
+  },
+  "checks": {
+    "backend_tests": {
+      "passed": 336,
+      "failed": 0
+    },
+    "frontend_tests": {
+      "passed": 36,
+      "failed": 0
+    },
+    "e2e_tests": {
+      "passed": 37,
+      "failed": 0,
+      "skipped": 8
+    },
+    "axe": {
+      "routes_scanned": 20,
+      "violations": 0
+    },
+    "responsive": {
+      "routes_checked": 20,
+      "widths": [
+        320,
+        390,
+        768,
+        1024,
+        1440
+      ]
+    },
+    "frontend_build": {
+      "status": "passed"
+    },
+    "openapi": {
+      "status": "passed",
+      "document_sha256": "2e479ace0202fd056823001eb40436a60bd3f4eea7b69478744466cb81547c63",
+      "paths": 15,
+      "operations": 19
+    },
+    "ruff": {
+      "findings": 0
+    },
+    "release_build": {
+      "runs": 2,
+      "deterministic": true
+    },
+    "audits": {
+      "public_tree": {
+        "tool": "scripts/public_audit.py",
+        "findings": 0
+      },
+      "git_history": {
+        "tool": "gitleaks git",
+        "findings": 0
+      },
+      "release_archive": {
+        "tool": "public audit and gitleaks on extracted ZIP",
+        "findings": 0
+      },
+      "python_distributions": {
+        "tool": "scripts/audit_python_distribution.py on extracted wheel and sdist",
+        "artifacts": 2,
+        "findings": 0
+      },
+      "npm": {
+        "tool": "npm audit",
+        "findings": 0
+      },
+      "python": {
+        "tool": "pip-audit",
+        "findings": 0
+      },
+      "capture_ocr": {
+        "tool": "Tesseract plus deterministic PII patterns and manual review",
+        "findings": 0
+      },
+      "capture_metadata": {
+        "tool": "WebP chunk inspection",
+        "findings": 0
+      }
+    }
+  },
+  "captures": [
+    {
+      "file": "radar-overview.webp",
+      "sha256": "e213b286ec41ebf5497a9280b3106e0a5fc33ba14b7353a91924439b286f5317",
+      "bytes": 39338,
+      "dimensions": [
+        1440,
+        900
+      ],
+      "ocr_pii_findings": 0,
+      "non_example_domains": []
+    },
+    {
+      "file": "score-explained.webp",
+      "sha256": "b404284457a7328cad7963f5446c669201354b882dbd8d89a18df2e045d2ccd6",
+      "bytes": 40808,
+      "dimensions": [
+        1024,
+        768
+      ],
+      "ocr_pii_findings": 0,
+      "non_example_domains": []
+    },
+    {
+      "file": "insights.webp",
+      "sha256": "1a6c4aaf32bd608a4c70b1ad0c1798a6f8ce0b69fae8a8621ddc8b27aa5edb9a",
+      "bytes": 30542,
+      "dimensions": [
+        1440,
+        900
+      ],
+      "ocr_pii_findings": 0,
+      "non_example_domains": []
+    },
+    {
+      "file": "mobile.webp",
+      "sha256": "72c8decff392147c191f7addf45fed07f391eb8f087b5b8dfe7c15b805fe9275",
+      "bytes": 17574,
+      "dimensions": [
+        390,
+        844
+      ],
+      "ocr_pii_findings": 0,
+      "non_example_domains": []
+    }
+  ],
   "limitations": [
-    "No test, audit, capture or publication result is claimed while the candidate commit is not pinned.",
-    "The final release builder rejects this pending record."
+    "This is a local release-candidate verification only.",
+    "No GitHub repository, push, tag, release, branch protection or GitHub Actions run was created or verified.",
+    "tested_product_commit and test_harness_commit identify the locally verified code-and-test commit immediately preceding this evidence record; the external ZIP attestation identifies the later packaging commit and tree.",
+    "The public repository and jonassuhard.com acceptance criteria remain unverified and unpublished."
   ]
 }
